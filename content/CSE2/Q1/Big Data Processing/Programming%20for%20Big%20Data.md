@@ -1,0 +1,5 @@
++++
+title = "Programming for Big Data"
+date = 2019-09-18
++++
+<p><a href="http://gousios.org/courses/bigdata/prog-big-data.html" target="_blank"><em>The slides are very useful, this post will only describe things that aren't in the slides but are mentioned in the lectures</em></a></p><p><br></p><h2 id="data-types"><strong>Data types</strong></h2><h3 id="types-of-data">Types of data</h3><p>Semi-structured data is better for distribution than structured data, as it's often easy to read and parse</p><p><br></p><h3 id="sequences-/-lists">Sequences / lists</h3><p>Processing big lists means splitting up those lists over many machines, which individually do processing over their part of the list. That's why in big data, immutable lists are used. </p><p><br></p><p>If it would be possible to change certain elements, everything would have to be synchronized again. When you can only append and prepend, only the first or last machine has to change.</p>

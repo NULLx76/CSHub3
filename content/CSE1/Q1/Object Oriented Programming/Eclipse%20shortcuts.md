@@ -1,0 +1,5 @@
++++
+title = "Eclipse shortcuts"
+date = 2018-11-06
++++
+<ul><li>Handy window for auto implementing things (see image): <em>Alt + Shift + S</em></li></ul><p><img src="https://i.imgur.com/k6iE288.png" width="273"></p><ul><li>Refactor: <em>Alt + Shift + R</em></li><li>Format code: <em>Ctrl + Shift + F</em></li><li>Open class: <em>Ctrl + Shift + T</em></li><li>Fix code: <em>Ctrl + 1</em></li><li>Organize imports: <em>Ctrl + Shift + O</em></li><li>Autocomplete: <em>Ctrl + space, </em>to autocomplete automatically, go to <em>Window -&gt; Preferences -&gt; Java -&gt; Editor -&gt; Content Assist -&gt; Auto activation triggers for Java -&gt; abcdef.....ABCDEF......</em></li><li>Go to next error: <em>Ctrl + .</em></li><li>Go to declaration of field / class / method: <em>Ctrl + click</em></li><li>Adding JavaDoc comment: <em>Alt + Shift + J</em></li></ul>

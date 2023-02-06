@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul id="breadcrumbs">
+  {% for parent in section.ancestors %}
+  {% set s = get_section(path=parent, include_pages=false) %}
+  <li><a href="{{s.permalink}}">{{s.title}}</a></li>
+  {% endfor %}
+  <li>{{ section.title }}</li>
+</ul>
+
+{% for subpage in section.pages %}
+  <a href="{{ subpage.permalink | safe }}">{{ subpage.title  }}</a>
+{% endfor %}
+
+{% for subsection in section.subsections | sort %}
+  {% set subsection_item = get_section(path=subsection) %}
+  <a href="{{ subsection_item.permalink | safe }}">{{ subsection_item.title  }}</a>
+{% endfor %}
+
+{% endblock content %}

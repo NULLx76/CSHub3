@@ -1,0 +1,5 @@
++++
+title = "Probability Theory and Statistics"
+date = 2019-05-16
++++
+<h2 id="assessment">Assessment</h2><p><span style="background-color: rgba(0, 0, 0, 0);">There are two written exams: a midterm (lecture 1-8, probability) and a final exam (lecture 9-16, statistics). The final grade is the average of the two grades. Both grades have to be at least 5.0 and the average should be at least 5.8 in order to pass the course.&nbsp;</span></p><p><br></p><p><span style="background-color: rgba(0, 0, 0, 0);">The resit replaces the final grade, i.e. it is not possible to retake the midterm and final exam separately and consist of multiple choice questions only.</span></p><p><br></p><p><strong>Permitted materials during tests: </strong><span style="background-color: rgba(0, 0, 0, 0);">Formula sheet (BYO: see Brightspace) and a simple, non-programmable, non-graphical calculator.</span></p>

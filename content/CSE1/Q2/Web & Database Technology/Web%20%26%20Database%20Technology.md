@@ -1,0 +1,5 @@
++++
+title = "Web & Database Technology"
+date = 2019-01-31
++++
+<h2>Assessment:</h2><p>WDB exists of two parts, web, database. Both have a test and have assignments</p><p><br></p><ul><li><strong>Test: </strong>multiple choice (40 questions) about practical and theoretical matters. These must be at least a 5</li><li><strong>Assignments: </strong>practical assignments you can optionally do for points, will be checked by a TA.</li></ul><p><br></p><p>Both tests weigh 40%, both assignments weigh 10%. These grades of all combined must be at least equal to <span class="ql-formula" data-value="5.8">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>5.8</mn></mrow><annotation encoding="application/x-tex">5.8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.64444em; vertical-align: 0em;"></span><span class="mord">5</span><span class="mord">.</span><span class="mord">8</span></span></span></span></span>﻿</span> </p>

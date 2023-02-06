@@ -1,0 +1,5 @@
++++
+title = "Digital Systems"
+date = 2020-09-01
++++
+<p>To pass this course, you must:</p><ul><li>Successfully complete the obligatory lab</li><li>Pass a written exam (20 MC questions) with a grade of <span class="ql-formula" data-value="\ge6">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>≥</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">\ge6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.7719400000000001em; vertical-align: -0.13597em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right: 0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height: 0.64444em; vertical-align: 0em;"></span><span class="mord">6</span></span></span></span></span>﻿</span></li></ul><p><br></p><p>If you answer 80% of the practice questions correctly, an incorrect answer on the final exam will be disregarded.</p>

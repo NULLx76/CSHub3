@@ -1,0 +1,5 @@
++++
+title = "Computer Networks"
+date = 2019-07-01
++++
+<h3 id="assessment">Assessment</h3><p>The course grade is the grade of the final exam.  The exam will contain roughly 25 questions, several multiple choice questions and usually 12 questions that require calculations (expect calculations like CRC checksums, Hamming codes, routing tables, and several bits of RSA encryption)</p><p><br></p><p>To be eligible for the exam, you need to pass the lab: </p><ul><li>You have to pass assignment 1, 4 and at least one of 2, 3, 5</li><li>Passing an assignment means all quizzes and programming exercises need to be completed on Weblab in the corresponding assignment directory</li></ul><p><br></p><h3 id="probably-on-the-exam">Probably on the exam</h3><ul><li>CRC</li><li>Hamming code calculations</li><li>Binary division without carry</li><li>RSA calculations</li><li>Shortest path on a routing graph (Dijkstra's Algorithm)</li><li>How many errors can you detect / correct with hamming codes?</li><li>Network bits / host bits IPv4</li><li>DHT Lookup</li></ul>
