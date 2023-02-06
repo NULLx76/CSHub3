@@ -3,7 +3,7 @@
 {% block content %}
 
 <h2>Studies</h2>
-<div class="pages">
+<div class="subsections">
   {% for subsection in section.subsections | sort %}
     {% set subsection_item = get_section(path=subsection) %}
     <a href="{{ subsection_item.permalink | safe }}">{{ subsection_item.title  }}</a>

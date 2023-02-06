@@ -9,13 +9,16 @@
   <li>{{ section.title }}</li>
 </ul>
 
+<div class="subsections">
+  {% for subsection in section.subsections | sort %}
+    {% set subsection_item = get_section(path=subsection) %}
+    <a href="{{ subsection_item.permalink | safe }}">{{ subsection_item.title  }}</a>
+  {% endfor %}
+</div>
+
 {% for subpage in section.pages %}
   <a href="{{ subpage.permalink | safe }}">{{ subpage.title  }}</a>
 {% endfor %}
 
-{% for subsection in section.subsections | sort %}
-  {% set subsection_item = get_section(path=subsection) %}
-  <a href="{{ subsection_item.permalink | safe }}">{{ subsection_item.title  }}</a>
-{% endfor %}
 
 {% endblock content %}
