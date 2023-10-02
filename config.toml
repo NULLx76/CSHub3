@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "https://cshub.nl"
+base_url = "https://nullx76.github.io/CSHub3/"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
