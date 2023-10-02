@@ -1,3 +1,3 @@
 +++
-title = "Minor: Education"
+title = "Minor - Education"
 +++

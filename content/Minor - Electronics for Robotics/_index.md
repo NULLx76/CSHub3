@@ -1,3 +1,3 @@
 +++
-title = "Minor: Electronics for Robotics"
+title = "Minor - Electronics for Robotics"
 +++

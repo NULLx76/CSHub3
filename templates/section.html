@@ -17,7 +17,9 @@
 </div>
 
 {% for subpage in section.pages %}
-  <a href="{{ subpage.permalink | safe }}">{{ subpage.title  }}</a>
+<ul>
+  <li>><a href="{{ subpage.permalink | safe }}">{{ subpage.title  }}</a></li>
+</ul>
 {% endfor %}
 
 
