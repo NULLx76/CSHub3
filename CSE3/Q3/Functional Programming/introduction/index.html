@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>MyBlog</title>
+  <link rel="stylesheet" href="https://nullx76.github.io/CSHub3/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <head>
+      <h1><a href="/">CSHub.nl</a></h1>
+    </head>
+    <section class="section">
+      
+  <section class="page">
+  <h1 id="what-is-functional-programming">What Is Functional Programming</h1><ul><li>A style of programming where programs are constructed by defining and applying functions.</li><li>A toolbox of techniques aimed at writing clear code at a high level of abstraction.</li><li>A family of programming languages that support and encourage these techniques.</li></ul><h2 id=""><br></h2><h2 id="why?">Why?</h2><ul><li>Write code that is clear, concise, and correct.</li><li>Refactor with confidence.</li><li>Learn new ways to think about programming.</li><li>Reason about program correctness.</li><li>Explore the future of programming languages</li></ul><h2 id=""><br></h2><h2 id="difference-with-imperative">Difference with Imperative</h2><p>In imperative programming computation happens primarily by updating values, while in functional programming it's primarily done through applying functions.</p><p><br></p><div style="white-space: normal;" class="markdown-body"><p><em>Javascript</em></p>
+<pre data-lang="javascript"><code>let sum = 0;
+for(let i = 1; i &lt;= 10; i ++ {
+	sum = sum + i;
+}
+</code></pre>
+<p><br>
+<em>Haskell</em></p>
+<pre data-lang="haskell"><code>sum [1..10]
+</code></pre>
+</div><p><br></p><p>In functional programming functions are first-class citizens.</p><h2 id=""><br></h2><h2 id="the-functional-toolbox">The Functional Toolbox</h2><ul><li>Higher-order functions</li><li>Lambda expressions</li><li>Algebraic datatypes</li><li>Pattern matching</li><li>Recursion</li><li>Immutable data</li><li>Pure functions</li><li>Lazy evaluation</li><li>Monads</li><li>Equational reasoning</li></ul><p><br></p><h2 id="pure-functions">Pure functions</h2><p>In effectful languages a function can do a lot, like IO.</p><p>With pure languages a function can only return or loop forever.</p><p><br></p><h1 id="haskell">Haskell</h1><p>Haskell is a statically typed, lazy, and purely functional programming language.</p><ul><li><em>Static types</em>: All types are checked at compile time.</li><li><em>Laziness</em>: Expressions are only evaluated when required.</li><li><em>Purity</em>: Functions do not have side effects.</li></ul><p>It does not have an escape hatch to avoid functional programming.</p><p><br></p><h1 id="agda">Agda</h1><p>Adga is a dependently typed, total functional programming language, and a proof assistant.</p><ul><li><em>Dependent types</em>: Types can refer to program expressions.</li><li><em>Totality</em>: Functions must be defined and terminating for all inputs.</li><li><em>Proof assistance</em>: Express properties of programs in their types, proofs are checked by the type checker.</li></ul><p><br></p><h2 id="why?">Why?</h2><p>Adga has one of the most cutting-edge type systems in existence. It can use the full power of functional programming at the type level.</p><p><br></p><p><br></p><h1 id="the-glasgow-haskell-compiler">The Glasgow Haskell Compiler</h1><ul><li>GHC: The most popular and modern Haskell compiler.</li><li>GHCi: The interactive mode of GHC where you can type-check and evaluate Haskell expressions.</li><li>Stack: A build tool for installing Haskell programs and libraries using GHC.</li></ul><p><br></p><h1 id="the-language">The Language</h1><p>Haskell is layout-sensitive, this means that indentation matters.</p><p>A Haskell program is a script with a <code>main</code> function.</p><p><br></p><h2 id="naming">Naming</h2><ul><li>Names of functions and variables start with small letters.</li><li>Names of constructors start with a capital letter.</li><li>Names of concrete types start with a capital letter.</li><li>Names of variables start with small letters.</li></ul><p><br></p><h2 id="functions">Functions</h2><p>Instead of <span class="ql-formula" data-value="f\left(x\right)">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mrow><mo fence="true">(</mo><mi>x</mi><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">f\left(x\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 1em; vertical-align: -0.25em;"></span><span style="margin-right: 0.10764em;" class="mord mathdefault">f</span><span class="mspace" style="margin-right: 0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top: 0em;">(</span><span class="mord mathdefault">x</span><span class="mclose delimcenter" style="top: 0em;">)</span></span></span></span></span></span>﻿</span> , Haskell uses the syntax of  <span class="ql-formula" data-value="f\ x">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mtext>&nbsp;</mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">f\ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.8888799999999999em; vertical-align: -0.19444em;"></span><span style="margin-right: 0.10764em;" class="mord mathdefault">f</span><span class="mspace">&nbsp;</span><span class="mord mathdefault">x</span></span></span></span></span>﻿</span> </p><p>Function application has highest priority in the parser, and associates to the left.</p><p><br></p><p><img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F67cd0b87-a83d-43cb-9bf9-eedaed1b174c%2FUntitled.png?table=block&amp;id=0f1c0b20-1263-4aa2-a1cc-e88d72b35fe7&amp;spaceId=e3b92986-23b3-4014-977b-b46cc4e05a90&amp;width=580&amp;userId=&amp;cache=v2" alt="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F67cd0b87-a83d-43cb-9bf9-eedaed1b174c%2FUntitled.png?table=block&amp;id=0f1c0b20-1263-4aa2-a1cc-e88d72b35fe7&amp;spaceId=e3b92986-23b3-4014-977b-b46cc4e05a90&amp;width=580&amp;userId=&amp;cache=v2"></p><p><br></p><div style="white-space: normal;" class="markdown-body"><p>Based on <a href="https://www.notion.so/Introduction-d97fd16d1ce9440b86b8179ef640d83d">Dany Sluijk's notes</a></p>
+</div>
+  </section>
+
+    </section>
+  </div>
+</body>
+
+</html>

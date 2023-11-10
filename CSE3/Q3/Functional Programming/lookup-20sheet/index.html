@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>MyBlog</title>
+  <link rel="stylesheet" href="https://nullx76.github.io/CSHub3/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <head>
+      <h1><a href="/">CSHub.nl</a></h1>
+    </head>
+    <section class="section">
+      
+  <section class="page">
+  <h2 id="week-1">Week 1</h2><h3 id="some-theory">Some theory</h3><ul><li><strong>Functional programming (declarative): </strong>treats programs as evaluating mathematical functions and <strong>avoids state and mutable data</strong></li><li class="ql-indent-1">A style of programming where programs are constructed by defining and applying functions.</li><li class="ql-indent-1">A toolbox of techniques aimed at writing clear code at a high level of abstraction.</li><li class="ql-indent-1">Function composition, partially applied function, currying</li><li><strong>Imperative programming: </strong>focuses on how to execute, defines control flow (a specified order of execution) as statements <strong>that change a program state </strong>(side-effects)</li></ul><p><br></p><ul><li><strong>Static typing: </strong>the process of verifying the type safety of a program based on analysis of a program's source code</li><li><strong>Dynamic typing:</strong> the process of verifying the type safety of a program at runtime</li></ul><p><br></p><ul><li><strong>Pure programming: </strong>its behavior is fully described by its inputs and outputs.</li><li class="ql-indent-1">No mutable state</li><li class="ql-indent-1">No input or output (text, file system, network, ...)</li><li class="ql-indent-1">No random or non-deterministic choices</li><li><strong>Effectful programming: </strong>side-effects are the norm. Monads are also effectful.</li></ul><p><br></p><ul><li><strong>Currying: </strong>converting a function that takes multiple arguments into a sequence of functions that each take a single argument</li></ul><p><br></p><h3 id="basic-type-classes">Basic type classes</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>class&nbsp;Eq&nbsp;a&nbsp;where&nbsp;
+  -- Eq laws 
+  -- Reflexivity: x == x = True
+  -- Symmetry: (x == y) = (y == x) 
+  -- Transitivity: If (x == y &amp;&amp; y == z) = True then x == z = True
+  -- Substitutivity: If x == y = True then f x == f y = True 1
+  -- Negation: x /= y = not (x == y)
+  (==),&nbsp;(/=)&nbsp;::&nbsp;a&nbsp;-&gt;&nbsp;a&nbsp;-&gt;&nbsp;Bool&nbsp;
+&nbsp;
+class&nbsp;(Eq&nbsp;a)&nbsp;=&gt;&nbsp;Ord&nbsp;a&nbsp;where&nbsp;
+&nbsp;&nbsp;compare&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;a&nbsp;-&gt;&nbsp;a&nbsp;-&gt;&nbsp;Ordering&nbsp;
+&nbsp;&nbsp;(&lt;),&nbsp;(&lt;=),&nbsp;(&gt;=),&nbsp;(&gt;)&nbsp;::&nbsp;a&nbsp;-&gt;&nbsp;a&nbsp;-&gt;&nbsp;Bool&nbsp;
+&nbsp; max,&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;a&nbsp;-&gt;&nbsp;a&nbsp;-&gt;&nbsp;a
+<p>class Show a where 
+  show :: a -&gt; String  </p>
+<p>class (Eq a, Show a) =&gt; Num a where 
+  (+), (-), (⋆) :: a -&gt; a -&gt; a 
+  negate        :: a -&gt; a 
+  abs, signum   :: a -&gt; a 
+  fromInteger   :: Integer -&gt; a 
+</code></pre></p>
+</div><p><br></p><h3 id="list-comprehension">List comprehension</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>[x | x &lt;- [1..10], even x]
+</code></pre>
+</div><p><br></p><h2 id="week-2">Week 2</h2><h3 id="nice-little-syntax-thingies">Nice little syntax thingies</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>cylinder :: Double -&gt; Double -&gt; Double 
+cylinder r h = 
+  let sideArea = 2 * pi * r * h 
+      topArea = pi * r ^2 
+  in sideArea + 2 * topArea
+</code></pre>
+</div><p><br></p><h3 id="folds">Folds</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>foldr (-) 0 [1,2,3] = 1-(2-(3-0)) = 2
+<p>foldl (-) 0 [1,2,3] = ((0-1)-2)-3 = -6
+foldl' -- strict version or foldl which doesn't evaluate its arg fully first (better for memory)
+</code></pre></p>
+</div><p><br></p><p>Can be used to express many recursive functions on lists, but not all (e.g. divide and conquer algorithms).</p><p><br></p><h3 id="quicktest">Quicktest</h3><p>We can do property based testing instead of regular testing because regular testing is:</p><ul><li>Boring because you need a lot of unit tests</li><li>Difficult because it is very easy to miss cases</li></ul><p><br></p><p><a href="https://hackage.haskell.org/package/QuickCheck-2.14.2/docs/Test-QuickCheck.html" target="_blank">More documentation</a></p><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Roundtrip properties</strong>: applying two or more functions that together result in the original input, e.g.</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>f (g (... (h x))) == x
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Observationally equal</strong>: functions produce the same outputs for all inputs, e.g.</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>f x == g x
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Preconditions</strong>: <code>... ==&gt; ...</code> only tests cases that satisfy the condition</li>
+</ul>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Custom generators</strong>:</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>arbitrary :: Arbitrary a =&gt; Gen a 
+chooseInt :: (Int, Int) -&gt; Gen Int 
+elements :: [a] -&gt; Gen a 
+listOf :: Gen a -&gt; Gen [a] 
+vectorOf :: Int -&gt; Gen a -&gt; Gen [a] 
+shuffle :: [a] -&gt; Gen [a]
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Properties</strong>: a generalization of the <code>Bool</code> type:</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>(==&gt;) :: Property -&gt; Property -&gt; Property 
+forAll :: Gen a -&gt; (a -&gt; Property) -&gt; Property 
+(===) :: Eq a =&gt; a -&gt; a -&gt; Property 
+(.&amp;&amp;.) :: Property -&gt; Property -&gt; Property 
+(.||.) :: Property -&gt; Property -&gt; Property
+</code></pre>
+</div><p><br></p><h2 id="week-3">Week 3</h2><h3 id="adts">ADTs</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>-- Record syntax
+-- Also generates the functions radius, width, height
+data Shape 
+  = Circle { radius :: Double } 
+  | Rect { width :: Double , height :: Double }
+</code></pre>
+</div><p><br></p><p>A <strong>newtype</strong> declaration is a specialized kind of <strong>data</strong> declaration with exactly one constructor taking exactly one argument. It is a "forced" alias (so different than <strong>type</strong>). It is also more efficient than <strong>data.</strong></p><p><br></p><h3 id="set-and-map">Set and Map</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>-- Set
+empty :: Set a 
+singleton :: a -&gt; Set a 
+fromList :: Ord a =&gt; [a] -&gt; Set a 
+insert :: Ord a =&gt; a -&gt; Set a -&gt; Set a 
+delete :: Ord a =&gt; a -&gt; Set a -&gt; Set a 
+member :: Ord a =&gt; a -&gt; Set a -&gt; Bool 
+size :: Set a -&gt; Int
+union :: Ord a =&gt; Set a -&gt; Set a -&gt; Set a 
+difference :: Ord a =&gt; Set a -&gt; Set a -&gt; Set a 
+intersection :: Ord a =&gt; Set a -&gt; Set a -&gt; Set a
+<p>-- Map
+empty :: Map k a 
+singleton :: k -&gt; a -&gt; Map k a 
+insert :: Ord k =&gt; k -&gt; a -&gt; Map k a -&gt; Map k a 
+delete :: Ord k =&gt; k -&gt; Map k a -&gt; Map k a 
+lookup :: Ord k =&gt; k -&gt; Map k a -&gt; Maybe a 
+size :: Map k a -&gt; Int 
+union :: Ord k =&gt; Map k a -&gt; Map k a -&gt; Map k a 
+difference :: Ord k =&gt; Map k a -&gt; Map k a -&gt; Map k a 
+intersection :: Ord k =&gt; Map k a -&gt; Map k a -&gt; Map k a
+</code></pre></p>
+</div><h3 id=""><br></h3><h3 id="type-vs-type-class-vs-instance">Type vs type class vs instance</h3><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Type:</strong> a kind of label that every expression has (e.g. <code>Char</code>)</li>
+<li><strong>Type class:</strong> &nbsp;a family of types that implement a common interface (= set of functions), e.g. <code>Eq a</code>. Some type classes are a subclass of another class: each instance must also be an instance of the base class.</li>
+<li><strong>Instance of typeclass</strong>: a type that belongs to a typeclass</li>
+</ul>
+</div><p><br></p><p>A new type can be declared as such:</p><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>newtype Sum a = Sum { getSum :: a }
+</code></pre>
+</div><p><br></p><p>See the next section about declaring new type classes.</p><p><br></p><p>A new instance can be declared as such:</p><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>instance Eq TrafficLight where 
+  Red == Red = True
+  Green == Green = True 
+  Yellow == Yellow = True 
+  _ == _ = False
+</code></pre>
+</div><p><br></p><p>The compiler will forbid all overlapping instances to provide <strong>global coherence </strong>(the result of a program at run time should not depend on which instances were chosen at compile time).</p><p><br></p><h3 id="semigroup-&amp;-monoid">Semigroup &amp; monoid</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>class Semigroup a where 
+  -- Semigroup law:
+  -- (x &lt;&gt; y) &lt;&gt; z = x &lt;&gt; (y &lt;&gt; z)
+  (&lt;&gt;) :: a -&gt; a -&gt; a 
+<p>class Semigroup a =&gt; Monoid a where 
+-- Monoid laws:
+-- mempty <code>mappend</code> x = x
+-- x <code>mappend</code> mempty = x 
+-- (x <code>mappend</code> y) <code>mappend</code> z = x <code>mappend</code> (y <code>mappend</code> z)
+mempty :: a 
+mappend :: a -&gt; a -&gt; a 
+mconcat :: [a] -&gt; a 
+mappend = (&lt;&gt;) 
+mconcat = foldr mappend mempty
+</code></pre></p>
+</div><p><br></p><h3 id="wrapper-types">Wrapper types</h3><p>You can use wrapper types to give several instances of a type class for the same type, you may want different implementations of monoids for lists.</p><p><br></p><p>This is done as such:</p><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>newtype Sum a = Sum { getSum :: a }
+</code></pre>
+</div><p><br></p><p>Note the first <em>Sum </em>is the name of the type and the second is the name of the constructor. Now we can implement instances of this type.</p><p><br></p><h2 id="week-4">Week 4</h2><h3 id="io">IO</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>putChar :: Char -&gt; IO () 
+putStr :: String -&gt; IO () 
+putStrLn :: String -&gt; IO () 
+print :: Show a =&gt; a -&gt; IO () 
+<p>getChar :: IO Char 
+getLine :: IO String
+readLn :: Read a =&gt; IO a
+</code></pre></p>
+</div><p><br></p><h3 id="do">Do</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>f :: IO a 
+f = do 
+  v1 &lt;- a1 
+  ... 
+  vn &lt;- an 
+  f v1 ... vn
+<p>f = a1 &gt;&gt;= (\v1 -&gt; ... an &gt;&gt;= (\vn -&gt; ...))
+</code></pre></p>
+</div><p><br></p><h3 id="functor,-applicative-and-monad">Functor, Applicative and Monad</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>class Functor f where 
+  -- Functor laws:
+  -- fmap id = id
+  -- fmap (g . h) = fmap g . fmap h
+<p>-- If the type parameter a occurs to the left of a function arrow (e.g. newtype Endo a = Endo (a -&gt; a)), the type cannot be made into a Functor 
+fmap :: (a -&gt; b) -&gt; f a -&gt; f b</p>
+<p>class Functor f =&gt; Applicative f where
+-- Applicative laws:
+-- pure id &lt;<em>&gt; x = x 
+-- pure (f x) = pure f &lt;</em>&gt; pure x 
+-- mf &lt;<em>&gt; pure y = pure (\g -&gt; g y) &lt;</em>&gt; mf 
+-- x &lt;<em>&gt; (y &lt;</em>&gt; z) = (pure (.) &lt;<em>&gt; x &lt;</em>&gt; y) &lt;<em>&gt; z
+pure :: a -&gt; f a 
+(&lt;</em>&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b
+</code></pre></p>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><p>Until now, we have viewed (applicative) functors as containers holding values of some type <code>a</code>. Another way to view them is as an effect that may occur while computing the result <code>a</code>. E.g. <code>Maybe</code> captures the possible failure (<code>Nothing</code>).</p>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>class Applicative m =&gt; Monad m where 
+  -- Monad laws:
+  -- return x &gt;&gt;= f = f x
+  -- mx &gt;&gt;= (\x -&gt; return x) = mx
+  -- (mx &gt;&gt;= f) &gt;&gt;= g = mx &gt;&gt;= (\x -&gt; (f x &gt;&gt;= g))
+  -- 
+  return :: a -&gt; m a 
+  (&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><p><code>&gt;&gt;</code> executes one action after the other, ignoring the output of the first</p>
+</div><p><br></p><h3 id="encoding-a-side-effect">Encoding a side-effect</h3><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Failing computation</strong>: <code>Maybe</code></li>
+</ul>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Throwing exceptions</strong>: <code>Either</code></li>
+</ul>
+<pre data-lang="text/x-haskell"><code>-- Right x = Just x
+-- Left err = informative version of Nothing
+instance Monad (Either e) where 
+  return x = Right x 
+  Left err &gt;&gt;= f = Left err 
+  Right x &gt;&gt;= f = f x
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Making non-deterministic choices</strong>: <code>[]</code></li>
+</ul>
+<pre data-lang="text/x-haskell"><code>-- [x] = Just x
+-- [] = Nothing
+instance Monad [] where 
+  return x = [x] 
+  xs &gt;&gt;= f = [y | x &lt;- xs, y &lt;- f x]
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Modifying global state</strong>: <code>State</code></li>
+</ul>
+<pre data-lang="text/x-haskell"><code>-- oldState -&gt; (someReturnValue, newState)
+newtype State s a = State (s -&gt; (a,s))
+<p>-- Returns the current state by setting a to the current state
+-- Doesn't update the state because the new state is the input state
+get = State (\st -&gt; (st,st)) </p>
+<p>-- Updates the state and returns nothing
+put st = State (_ -&gt; ((),st))
+</code></pre></p>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Performing IO</strong>: <code>IO</code></li>
+</ul>
+</div><p><br></p><h3 id="other-monads">Other monads</h3><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Reader</strong>: gives access to extra input of type <code>r</code>:</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>newtype Reader r a = Reader (r -&gt; a)
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><strong>Writer</strong>: allows writing some output of type <code>w</code>:</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>newtype Writer w a = Writer (w, a)
+</code></pre>
+</div><p><br></p><h3 id="monad-functions">Monad functions</h3><div style="white-space: normal;" class="markdown-body"><ul>
+<li><code>when</code>: executes an action only when the condition is <code>True</code></li>
+</ul>
+<pre data-lang="text/x-haskell"><code>when :: Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><code>sequence</code>: runs a list of actions and collect the results</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>sequence :: Monad m =&gt; t (m a) -&gt; m (t a)
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><code>mapM</code>: a monadic version of <code>map</code></li>
+</ul>
+<pre data-lang="text/x-haskell"><code>mapM :: (Traversable t, Monad m) =&gt; (a -&gt; m b) -&gt; t a -&gt; m (t b)
+mapM f xs = sequence (map f xs)
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><code>forM</code>: a monadic version of <code>for</code> (i.e. <code>mapM</code> with flipped arguments`)</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>forM :: (Traversable t, Monad m) =&gt; t a -&gt; (a -&gt; m b) -&gt; m (t b)
+forM = flip mapM
+</code></pre>
+</div><p><br></p><h2 id="week-5">Week 5</h2><h3 id="evaluation-strategies">Evaluation strategies</h3><ul><li>A <strong>reducible expression</strong> (or redex) is a function application that can be ‘reduced’</li><li>An evaluation strategy gives a general way to pick a redex to reduce next</li><li class="ql-indent-1"><strong>Innermost reduction</strong>: pick a redex that contains no other redex, <em>call-by-value</em></li><li class="ql-indent-1"><strong>Outermost reduction</strong>: pick a redex that is not contained in another redex, <em>call-by-name</em></li><li>Haskell can only apply lambda's, so it can't select redexes within lambdas</li></ul><p><br></p><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>-- Call-by-value
+    (\x -&gt; 1 + 2) (3 + 4) 
+--&gt; (\x -&gt; 1 + 2) 7 
+--&gt; 1 + 2 
+--&gt; 0
+<p>-- Call-by-name
+(\x -&gt; 1 + 2) -/-&gt; (no reduction)
+</code></pre></p>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><p>For functions that don’t (always) use their arguments, <em>call-by-value</em> will do useless work:</p>
+<pre data-lang="text/x-haskell"><code>(\x -&gt; 42) (2+3) --&gt; (\x -&gt; 42) 5 --&gt; 42 
+</code></pre>
+<p>For functions that use their arguments more than once, <em>call-by-name</em> will do useless work:</p>
+<pre data-lang="text/x-haskell"><code>(\x -&gt; x * x) (2+3) --&gt; (2+3) * (2+3) --&gt; 5 * (2+3) --&gt; 5 * 5 --&gt; 25
+</code></pre>
+<p>The best of both worlds is a thunked version of <em>call-by-name</em>: <strong>call-by-need</strong>. The first time the argument is used, the thunk is evaluated and the result is stored in the thunk. The next time the value stored in the thunk is used:</p>
+<pre data-lang="text/x-haskell"><code>(\x -&gt; x * x) (1 + 2) [            ] 
+--&gt; x * x             [ x := 1 + 2 ] 
+--&gt; 3 * x             [ x := 3     ] 
+--&gt; 3 * 3             [ x := 3     ] 
+--&gt; 9                 [ x := 3     ]
+</code></pre>
+</div><p><br></p><p>+  always terminates if possible, smallest number of steps, allows us to work with infinite data structures</p><p>-  more memory usage, runtime overhead, harder to predict execution plan</p><p><br></p><h3 id="forcing-evaluation">Forcing evaluation</h3><div style="white-space: normal;" class="markdown-body"><ul>
+<li><code>seq</code>: the expression <code>seq u v</code> will evaluate <code>u</code> to <strong>head normal form</strong> before returning <code>v</code></li>
+</ul>
+<pre data-lang="text/x-haskell"><code>seq :: a -&gt; b -&gt; b
+(1+2) `seq` 5 --&gt; 3 `seq` 5 --&gt; 5
+</code></pre>
+</div><p><br></p><div style="white-space: normal;" class="markdown-body"><ul>
+<li><code>($!)</code>: the expression <code>f $! x</code> evaluates <code>x</code> before applying <code>f</code> (call-by-value)</li>
+</ul>
+<pre data-lang="text/x-haskell"><code>($!) :: (a -&gt; b) -&gt; a -&gt; b 
+f $! x = x `seq` f x
+</code></pre>
+</div><p><br></p><h3 id="lazy-vs-strict">Lazy vs strict</h3><ul><li><strong>Lazy evaluation</strong> is often more efficient when working with small expressions that produce big data structures.</li><li><strong>Strict evaluation</strong> is often more efficient when working with big expressions that produce small data structures.</li></ul><p><br></p><div style="white-space: normal;" class="markdown-body"><pre data-lang="hs"><code>foldl' (+) 0 [1..1000]
+</code></pre>
+</div><p><br></p><ul><li>Second argument becomes big expression but computes to small Int ⇒ strict is better</li><li>Third argument is small expression but computes to long [Int] ⇒ lazy is better</li></ul><p><br></p><h3 id="laziness-in-folds">Laziness in folds</h3><div style="white-space: normal;" class="markdown-body"><p><code>foldr</code> is often the better choice is that the folding function can short-circuit, that is, terminate early by yielding a result which does not depend on the value of the accumulating parameter. When such possibilities arise with some frequency in your problem, short-circuiting can greatly improve your program's performance. <strong>Left folds can never short-circuit.</strong></p>
+</div><p><br></p><p>The reason is illustrated here:</p><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>-- foldr would unpack as such
+-- This would be fine!
+foldr (&amp;&amp;) True (repeat False)
+= False &amp;&amp; (foldr (&amp;&amp;) True (repeat False))
+= False
+<p>-- foldl would unpack as such
+-- This would yield an out of memory
+foldl (&amp;&amp;) True (repeat False)
+= foldl (&amp;&amp;) (True &amp;&amp; False) (repeat False)
+= foldl (&amp;&amp;) ((True &amp;&amp; False) &amp;&amp; False) (repeat False)
+= foldl (&amp;&amp;) (((True &amp;&amp; False) &amp;&amp; False) &amp;&amp; False) (repeat False)
+= ...</p>
+<p>-- foldl' would unpack as such
+-- This would loop infinitely
+foldl' (&amp;&amp;) True (repeat False)
+= foldl' (&amp;&amp;) False (repeat False)
+= foldl' (&amp;&amp;) False (repeat False)
+= foldl' (&amp;&amp;) False (repeat False)
+= ...
+</code></pre></p>
+</div><p><br></p><h2 id="week-6">Week 6</h2><h3 id="pure-vs-total-functional-language">Pure vs total functional language</h3><p>Agda is a total language:</p><ul><li>NO runtime errors</li><li>NO incomplete pattern matches</li><li>NO non-terminating functions (every input is mapped to an output)</li></ul><p><br></p><p>It uses a <strong>coverage check </strong>to ensure all definitions by pattern matching are complete</p><p>It uses a <strong>termination check </strong>to ensure all recursive definitions are terminating</p><p>It only accepts functions that are <strong>structurally recursive: </strong>the argument of each recursive call must be a subterm of the argument on the left of the clause</p><p><br></p><h3 id="unicode-characters">Unicode characters</h3><div style="white-space: normal;" class="markdown-body"><p>→ <code>\to</code></p>
+<p>λ <code>\lambda</code></p>
+<p>× <code>\times</code></p>
+<p>Σ <code>\Sigma</code></p>
+<p>⊤ <code>\top</code></p>
+</div><div style="white-space: normal;" class="markdown-body"><p>⊥ <code>\bot</code></p>
+<p>≡ <code>\equiv</code></p>
+</div><p><br></p><h3 id="data-types">Data types</h3><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-haskell"><code>-- The basic form of a datatype is
+data D : Setᵢ where
+&nbsp;c₁ : A₁
+&nbsp;...
+&nbsp;cₙ : Aₙ
+<p>-- E.g.
+data BinTree : Set where
+-- These are constructors and MUST end in a BinTree
+ leaf  : Nat → BinTree
+ branch : BinTree → BinTree → BinTree</p>
+<p>-- They can also be parameterized:
+data List (A : Set) : Set where
+ [] : List A
+ <em>∷</em> : A → List A → List A</p>
+<p>-- In contrast to parameters which are required to be the same for all constructors, indices can vary from constructor to constructor
+data Vector (A : Set) : Nat → Set where
+ [] : Vector A zero
+ <em>∷</em> : {n : Nat} → A → Vector A n → Vector A (suc n)</p>
+<pre data-lang="w" style="background-color:#2b303b;color:#c0c5ce;" class="language-w "><code class="language-w" data-lang="w"><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;natural-numbers&quot;&gt;Natural numbers&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;-- To not just have to work with suc zero etc, we can enable Agda support for machine integers:
+</span><span>{-# BUILTIN NATURAL Nat #-}
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;dependent-types&quot;&gt;Dependent types&lt;/h3&gt;&lt;p&gt;A &lt;strong&gt;dependent type&lt;/strong&gt; is a type whose definition depends on a value. It can be expressed as such:&lt;/p&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;data Food : Flavour → Set where 
+</span><span>  pizza : Food cheesy 
+</span><span>  cake : Food chocolatey 
+</span><span>  bread : (f : Flavour) → Food f
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;The argument of a &lt;strong&gt;parametrized type&lt;/strong&gt; (e.g. &lt;code&gt;a&lt;/code&gt; in &lt;code&gt;Maybe a&lt;/code&gt;) in Haskell is a type, while the argument of a dependent type is an expression of some type. All types &lt;code&gt;Maybe a&lt;/code&gt; have the same constructors (&lt;code&gt;Nothing&lt;/code&gt; and &lt;code&gt;Just&lt;/code&gt;) no matter what &lt;code&gt;a&lt;/code&gt; is, while &lt;code&gt;Food f&lt;/code&gt; has different constructors depending on &lt;code&gt;f&lt;/code&gt;&lt;/p&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;A dependent function type is a type of the form &lt;code&gt;(x : A) → B x&lt;/code&gt; where the type of the output depends on the value of the input:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;zeroes : (n : Nat) → Vec Nat n 
+</span><span>zeroes zero = [] 
+</span><span>zeroes (suc n) = 0 :: zeroes n
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;vec&quot;&gt;Vec&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;&lt;code&gt;Vec A n&lt;/code&gt; is the type of vectors with exactly &lt;code&gt;n&lt;/code&gt; arguments of type &lt;code&gt;A&lt;/code&gt;. Now we can use this to check the actual length:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;data Vec (A : Set) : Nat → Set where 
+</span><span>  [] : Vec A 0 
+</span><span>  _::_ : {n : Nat} → A → Vec A n → Vec A (suc n)
+</span><span>
+</span><span>
+</span><span>-- Can be used as:
+</span><span>myVec4 : Vec Nat (2 + 2) 
+</span><span>myVec4 = 1 :: 2 :: 3 :: 4 :: []
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;fin&quot;&gt;Fin&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;&lt;code&gt;Fin n&lt;/code&gt; is a type that denotes we have a number between 0 and n-1. &lt;code&gt;Fin 0&lt;/code&gt; is an empty type.&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;data Fin : Nat → Set where 
+</span><span>  zero : {n : Nat} → Fin (suc n) 
+</span><span>  suc : {n : Nat} → Fin n → Fin (suc n)
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;p&gt;To denote a case that can never happen, we can use the &lt;strong&gt;absurd pattern&lt;/strong&gt; &lt;code&gt;()&lt;/code&gt;:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;lookupVec : {A : Set} {n : Nat} → Vec A n → Fin n → A 
+</span><span>lookupVec [] () 
+</span><span>lookupVec (x :: xs) zero = x 
+</span><span>lookupVec (x :: xs) (suc i) = lookupVec xs i
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;function-into-set&quot;&gt;Function into Set&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;Since Set is just another type, we can use pattern matching to define new types:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;pickType : Bool → Set 
+</span><span>pickType true = Nat 
+</span><span>pickType false = Bool → Bool
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;p&gt;Now &lt;code&gt;pickType true&lt;/code&gt; is an alias for Nat, and &lt;code&gt;pickType false&lt;/code&gt; is an alias for Bool:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;test2 : pickType true 
+</span><span>test2 = suc zero
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;dependent-pairs&quot;&gt;Dependent pairs&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;The type &lt;code&gt;Σ A B1&lt;/code&gt; is the type of dependent pairs &lt;code&gt;(x, y)&lt;/code&gt; where the type of y can change depending on the value of &lt;code&gt;x &lt;/code&gt;:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;data Σ (A : Set) (B : A → Set) : Set where 
+</span><span>  _,_ : (x : A) → B x → Σ A B
+</span><span>
+</span><span>
+</span><span>pair1 : Σ Nat (λ n → Vec Bool n) 
+</span><span>pair1 = (2 , (true :: false :: [])) 
+</span><span>
+</span><span>
+</span><span>pair2 : Σ Nat (λ n → Vec Bool n) 
+</span><span>pair2 = (0 , [])
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;p&gt;We can define regular pairs (where the type of the second component doesn’t actually depend on the first) as a special case of the &lt;code&gt;Σ&lt;/code&gt; type:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;_×’_ : (A B : Set) → Set 
+</span><span>A ×’ B = Σ A (λ _ → B)
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h2 id=&quot;week-7&quot;&gt;Week 7&lt;/h2&gt;&lt;h3 id=&quot;curry-howard-correspondance&quot;&gt;Curry-Howard correspondance&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;We can interpret logical propositions (&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mo&gt;∧&lt;/mo&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;mo separator=&quot;true&quot;&gt;,&lt;/mo&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;¬&lt;/mi&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mo separator=&quot;true&quot;&gt;,&lt;/mo&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mo&gt;⇒&lt;/mo&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;mo separator=&quot;true&quot;&gt;,&lt;/mo&gt;&lt;mo&gt;…&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;A ∧ B, ¬A, A ⇒ B, \dots&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.68333em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;∧&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8777699999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.05017em;&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;¬&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;⇒&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8777699999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.05017em;&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;mpunct&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;minner&quot;&gt;…&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;) as the types of all their possible proofs. A &lt;code&gt;false&lt;/code&gt; proposition has no proofs, so it corresponds to an &lt;code&gt;empty&lt;/code&gt; type:&lt;/p&gt;
+</span><span>&lt;ol&gt;
+</span><span>&lt;li&gt;Propositions are types&lt;/li&gt;
+</span><span>&lt;li&gt;Proofs are programs&lt;/li&gt;
+</span><span>&lt;li&gt;Simplifying a proof is evaluating a program&lt;/li&gt;
+</span><span>&lt;/ol&gt;
+</span><span>&lt;p&gt;We can only use this in a total language because we must have a way to express false propositions, without infinitely looping or having any uncovered cases.&lt;/p&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;table&gt;
+</span><span>&lt;thead&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;th&gt;Propositional logic&lt;/th&gt;
+</span><span>&lt;th&gt;&lt;/th&gt;
+</span><span>&lt;th&gt;Type system&lt;/th&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;/thead&gt;
+</span><span>&lt;tbody&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;proposition&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;P&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.68333em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;proof of a proposition&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mo&gt;:&lt;/mo&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;p: P&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.625em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.68333em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;program of a type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;conjunction (&lt;code&gt;AND&lt;/code&gt;)&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo&gt;×&lt;/mo&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;P\times Q&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.76666em;vertical-align:-0.08333em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;×&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8777699999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;pair type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;disjunction (&lt;code&gt;OR&lt;/code&gt;)&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mtext&gt;Either&lt;/mtext&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\text{Either} P Q&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8888799999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord text&quot;&gt;&lt;span class=&quot;mord&quot;&gt;Either&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;either type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;implication&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo&gt;→&lt;/mo&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;P\to Q&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.68333em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8777699999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;function type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;truth&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;⊤&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\top&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.69444em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;⊤&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;unit type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;falsity&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;⊥&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\bot&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.69444em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;⊥&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;empty type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;negation (&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\not P&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8888799999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.69444em;&quot;&gt;&lt;span style=&quot;top:-3em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;rlap&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8888799999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;inner&quot;&gt;&lt;span class=&quot;mrel&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;fix&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.19444em;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.68333em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;)&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo&gt;→&lt;/mo&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;⊥&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;P\to \bot&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.68333em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.69444em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;⊥&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;-&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;equivalence (&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mtext&gt;  &lt;/mtext&gt;&lt;mo&gt;⟺&lt;/mo&gt;&lt;mtext&gt;  &lt;/mtext&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;P\iff Q&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.70733em;vertical-align:-0.024em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;⟺&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.8777699999999999em;vertical-align:-0.19444em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;)&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo&gt;→&lt;/mo&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;×&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;Q&lt;/mi&gt;&lt;mo&gt;→&lt;/mo&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;(P\to Q)\times (Q\to P)&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;×&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;Q&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;-&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;universal quantification (for all)&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;:&lt;/mo&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;→&lt;/mo&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;(x: A)\to P x&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.68333em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;x&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;dependent function type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;existential quantification (there exists)&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;Σ&lt;/mi&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;λ&lt;/mi&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;→&lt;/mo&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\Sigma A(\lambda x \to P x)&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;Σ&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;λ&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.13889em;&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;dependent pair type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;tr&gt;
+</span><span>&lt;td&gt;equality&lt;/td&gt;
+</span><span>&lt;td&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mo&gt;≡&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\equiv&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.46375em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;≡&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/td&gt;
+</span><span>&lt;td&gt;identity type&lt;/td&gt;
+</span><span>&lt;/tr&gt;
+</span><span>&lt;/tbody&gt;
+</span><span>&lt;/table&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;constructive-vs-classical-logic&quot;&gt;Constructive vs classical logic&lt;/h3&gt;&lt;p&gt;In classical logic we can prove &lt;span class=&quot;ql-formula&quot; data-value=&quot;P\vee\left(\neg P\right)&quot;&gt;﻿&lt;span contenteditable=&quot;false&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo&gt;∨&lt;/mo&gt;&lt;mrow&gt;&lt;mo fence=&quot;true&quot;&gt;(&lt;/mo&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;¬&lt;/mi&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo fence=&quot;true&quot;&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;P\vee\left(\neg P\right)&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height: 0.68333em; vertical-align: 0em;&quot;&gt;&lt;/span&gt;&lt;span style=&quot;margin-right: 0.13889em;&quot; class=&quot;mord mathdefault&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right: 0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;∨&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right: 0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height: 1em; vertical-align: -0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;minner&quot;&gt;&lt;span class=&quot;mopen delimcenter&quot; style=&quot;top: 0em;&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;¬&lt;/span&gt;&lt;span style=&quot;margin-right: 0.13889em;&quot; class=&quot;mord mathdefault&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mclose delimcenter&quot; style=&quot;top: 0em;&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;﻿&lt;/span&gt; (law of excluded middle) and &lt;span class=&quot;ql-formula&quot; data-value=&quot;\neg\neg P\Rightarrow P&quot;&gt;﻿&lt;span contenteditable=&quot;false&quot;&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;¬&lt;/mi&gt;&lt;mi mathvariant=&quot;normal&quot;&gt;¬&lt;/mi&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;mo&gt;⇒&lt;/mo&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;\neg\neg P\Rightarrow P&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height: 0.68333em; vertical-align: 0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;¬&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;¬&lt;/span&gt;&lt;span style=&quot;margin-right: 0.13889em;&quot; class=&quot;mord mathdefault&quot;&gt;P&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right: 0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;⇒&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right: 0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height: 0.68333em; vertical-align: 0em;&quot;&gt;&lt;/span&gt;&lt;span style=&quot;margin-right: 0.13889em;&quot; class=&quot;mord mathdefault&quot;&gt;P&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;﻿&lt;/span&gt; (double negation elimination). However, Agda uses &lt;strong&gt;constructive logic&lt;/strong&gt;, so these problems are unprovable.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;&lt;code&gt;((A × B) → ⊥) → Either (A → ⊥) (B → ⊥)&lt;/code&gt; cannot be proven because if &lt;code&gt;((A × B) → ⊥)&lt;/code&gt; holds, it is unknown whether this is because of &lt;code&gt;A&lt;/code&gt;, &lt;code&gt;B&lt;/code&gt; or both. Thus we don&#39;t know which case to pick on the right hand side.&lt;/p&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;proving-evenness&quot;&gt;Proving evenness&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;data IsEven : Nat → Set where
+</span><span>  e-zero : IsEven zero -- Note this is an existing type and thus true
+</span><span>  e-suc2 : {n : Nat} → IsEven n → IsEven (suc (suc n)) -- This type will only exist if there are two successors
+</span><span>
+</span><span>
+</span><span>-- We can prove that every double of any number n is even:
+</span><span>double-even : (n : Nat) → IsEven (double n) 
+</span><span>double-even zero = e-zero 
+</span><span>double-even (suc m) = e-suc2 (double-even m)
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;istrue&quot;&gt;IsTrue&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;-- if b = true, isTrue b has one element
+</span><span>-- if b = false, it has no elements =&amp;gt; empty type
+</span><span>data IsTrue : Bool → Set where 
+</span><span>  is-true : IsTrue true
+</span><span>
+</span><span>
+</span><span>-- We can prove that any number is equal to itself
+</span><span>n-equals-n : (n : Nat) → IsTrue (n =Nat n) 
+</span><span>n-equals-n zero = is-true 
+</span><span>n-equals-n (suc m) = n-equals-n m
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;identity&quot;&gt;Identity&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;p&gt;We can generalize &lt;code&gt;IsTrue&lt;/code&gt; to some elements being equal to each other:&lt;/p&gt;
+</span><span>&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;-- If x and y are equal x ≡ y has one constructor, refl
+</span><span>-- If they are not equal, x ≡ y is an empty type
+</span><span>data _≡_ {A : Set} : A → A → Set where 
+</span><span>  refl : {x : A} → x ≡ x
+</span><span>
+</span><span>
+</span><span>not-not : (b : Bool) → not (not b) ≡ b 
+</span><span>not-not true = refl 
+</span><span>not-not false = refl
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;properties-of-equality&quot;&gt;Properties of equality&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;-- Symmetry: if x is equal to y, y is equal to x
+</span><span>sym : {A : Set} {x y : A} → x ≡ y → y ≡ x 
+</span><span>sym refl = refl
+</span><span>
+</span><span>
+</span><span>-- Transitivity: if x is equal to y and y is equal to z, x is equal to z
+</span><span>trans : {A : Set} {x y z : A} → x ≡ y → y ≡ z → x ≡ z 
+</span><span>trans refl refl = refl
+</span><span>
+</span><span>
+</span><span>-- Congruence: if f: A → B is a function and x is equal to y, then f x is equal to f y
+</span><span>cong : {A B : Set} {x y : A} → (f : A → B) → x ≡ y → f x ≡ f y 
+</span><span>cong f refl = refl
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;h3 id=&quot;equational-reasoning&quot;&gt;Equational reasoning&lt;/h3&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;reverse-singleton : {A : Set} (x : A) → reverse [ x ] ≡ [ x ] 
+</span><span>reverse-singleton x = 
+</span><span>  begin 
+</span><span>    reverse [ x ] = 
+</span><span>  &amp;lt;&amp;gt; -- definition of [_] 
+</span><span>    reverse (x :: []) 
+</span><span>  &amp;lt;&amp;gt; -- applying reverse (second clause) 
+</span><span>    reverse [] ++ [ x ] 
+</span><span>  &amp;lt;&amp;gt; -- applying reverse (first clause) 
+</span><span>    [] ++ [ x ] 
+</span><span>  &amp;lt;&amp;gt; -- applying 
+</span><span>   _++_ [ x ]
+</span><span>  end
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Sometimes we also need to provide an &lt;strong&gt;explicit proof:&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;div style=&quot;white-space: normal;&quot; class=&quot;markdown-body&quot;&gt;&lt;pre data-lang=&quot;text/x-haskell&quot;&gt;&lt;code&gt;add-n-zero : (n : Nat) → n + zero ≡ n 
+</span><span>  ...
+</span><span>    suc (n + zero)
+</span><span>  &amp;lt; cong suc (add-n-zero n) &amp;gt;
+</span><span>    suc n
+</span><span>  end
+</span><span>&lt;/code&gt;&lt;/pre&gt;
+</span><span>&lt;/div&gt;</span></code></pre>
+
+  </section>
+
+    </section>
+  </div>
+</body>
+
+</html>

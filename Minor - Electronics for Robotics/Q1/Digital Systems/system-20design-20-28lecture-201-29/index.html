@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>MyBlog</title>
+  <link rel="stylesheet" href="https://nullx76.github.io/CSHub3/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <head>
+      <h1><a href="/">CSHub.nl</a></h1>
+    </head>
+    <section class="section">
+      
+  <section class="page">
+  <h1 id="system-design">System design</h1><h2 id="analog-vs-digital-systems">Analog vs digital systems</h2><p>Analog system has <strong>continuous</strong> input and output.</p><p><br></p><p>Digital system has <strong>discrete</strong> input and output, which jump. Some advantages of Digital Systems:</p><ul><li>We can represent any kinds of data which can then be processed</li><li><span style="background-color: transparent;">Less sensitive to noise</span></li><li>Adding bits increases accuracy</li><li>You can make a trade-off between speed &amp; amount of hardware</li></ul><p><br></p><p>Using ADC (Analog to Digital Converter) and a DAC (Digital to Analog Converter) we can convert between two types of signals.</p><p><br></p><h2 id="combinational-vs-sequential-systems">Combinational vs Sequential systems</h2><p>Combinational systems only depend on the <strong>previous output</strong>, not the entire past, there is no memory (first image).</p><p>Sequential systems depend on <strong>multiple (or all) previous outputs</strong>, memory is required (second image). Note that it doesn't necessarily need to remember all previous values, we use states to represent a certain history.</p><p><br></p><p><img src="https://i.imgur.com/5PrgEST.png" width="147"></p><p><em>Image taken from slides by Stephan Wong</em></p><p><br></p><h3 id="combinational-systems">Combinational Systems</h3><p>To apply a "function" to an input, we <strong>code </strong>the input into a <strong>binary specification. </strong>We transform it from <strong>input </strong>to <strong>output</strong> and subsequently <strong>decode </strong>it back to analog.</p><p><br></p><p>In the following image, the underscore means vector of bits.</p><p><img src="https://i.imgur.com/zrW6KrG.png" width="434"></p><p><em>Image taken from slides by Stephan Wong</em></p><p><br></p><p><br></p><h2 id="specification,-implementation,-analysis,-design">Specification, Implementation, Analysis, Design</h2><p>There are 4 tasks in the design of digital systems:</p><ol><li>Specification</li><li>Design</li><li>Implementation</li><li>Verification (analysis)</li></ol><p><br></p><p>We usually design these systems in an hierarchical manner; smaller, simpler parts combined yield a more complex end product.</p><p><br></p><p>This can be done in 2 ways:</p><ul><li><strong>Analysis: </strong>derive a specification from implementation</li><li><strong>Design: </strong>make an implementation that satisfies the specification</li></ul><p><br></p><h3 id="high-level-specification">High-level specification</h3><p>A high-level specification consists of:</p><ul><li><strong>An input set:</strong> set of values for input</li><li><strong>An output set:</strong> set of values for the output</li><li><strong>Input-output function:</strong> specification of the input-output function. This can be represented in a couple of ways:</li><li class="ql-indent-1">Table</li><li class="ql-indent-1">Arithmetic expression</li><li class="ql-indent-1">Conditional expression</li><li class="ql-indent-1">Logical expression</li><li class="ql-indent-1">Composition of simple functions</li></ul><p><br></p><h3 id="cad">CAD</h3><p>We can use Computer-Aided Design (<strong>CAD</strong>) tools to design complex systems using automated synthesis.</p><p><br></p><p>This means that such a system semi-automatically translates a specification into an optimized design.</p>
+  </section>
+
+    </section>
+  </div>
+</body>
+
+</html>

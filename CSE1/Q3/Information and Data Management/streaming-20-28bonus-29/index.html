@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>MyBlog</title>
+  <link rel="stylesheet" href="https://nullx76.github.io/CSHub3/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <head>
+      <h1><a href="/">CSHub.nl</a></h1>
+    </head>
+    <section class="section">
+      
+  <section class="page">
+  <h1 id="streaming"><span style="background-color: rgba(0, 0, 0, 0);">Streaming</span></h1><h2 id="streaming-data"><strong style="background-color: rgba(0, 0, 0, 0);">Streaming data</strong></h2><ul><li><span style="background-color: rgba(0, 0, 0, 0);">Unbounded data with no clear beginning and end</span></li><li><span style="background-color: rgba(0, 0, 0, 0);">Typically, each record is associated with the timestamp of when it was created</span></li><li><span style="background-color: rgba(0, 0, 0, 0);">Pretty much all data is initially created in the form of a stream</span></li></ul><p><br></p><h2 id="stream-vs-batch-processing"><strong style="background-color: rgba(0, 0, 0, 0);">Stream vs batch processing</strong></h2><p><strong style="background-color: rgba(0, 0, 0, 0);">Batch</strong><span style="background-color: rgba(0, 0, 0, 0);">: processing that takes finite time to complete and produces results only in the end</span></p><p><strong style="background-color: rgba(0, 0, 0, 0);">Stream</strong><span style="background-color: rgba(0, 0, 0, 0);">: continuous processing that continuously produces results</span></p><p><br></p><h2 id="types-of-streaming"><span style="background-color: rgba(0, 0, 0, 0);">Types of streaming</span></h2><p><span style="background-color: rgba(0, 0, 0, 0);"><img src="https://i.imgur.com/mmaR84R.png" width="459"></span></p><p><em style="background-color: rgba(0, 0, 0, 0);">Image taken from slides by </em><em>A. Katsifodimos</em></p><p><br></p><h2 id="event-vs-processing-time"><span style="background-color: rgba(0, 0, 0, 0);">Event vs processing time</span></h2><p><strong style="background-color: rgba(0, 0, 0, 0);">Event time:</strong><span style="background-color: rgba(0, 0, 0, 0);">&nbsp;event time is the time that each individual event occurred on its producing device.</span></p><p><strong style="background-color: rgba(0, 0, 0, 0);">Processing time</strong><span style="background-color: rgba(0, 0, 0, 0);">: processing time refers to the system time of the machine that is executing the respective operation.</span></p><p><br></p><h2 id="state-guarantees-during-failures"><span style="background-color: rgba(0, 0, 0, 0);">State guarantees during failures</span></h2><ul><li><strong style="background-color: rgba(0, 0, 0, 0);">At most once: </strong><span style="background-color: rgba(0, 0, 0, 0);">state might be lost, we might undercount</span></li><li><strong style="background-color: rgba(0, 0, 0, 0);">At least once: </strong><span style="background-color: rgba(0, 0, 0, 0);">might overcount, won't undercount</span></li><li><strong style="background-color: rgba(0, 0, 0, 0);">Exactly once: </strong><span style="background-color: rgba(0, 0, 0, 0);">will neither over-, nor undercout</span></li></ul><p><br></p><p><span style="background-color: rgba(0, 0, 0, 0);">Apache Flink's algorithm guarantees exactly-once processing</span></p>
+  </section>
+
+    </section>
+  </div>
+</body>
+
+</html>

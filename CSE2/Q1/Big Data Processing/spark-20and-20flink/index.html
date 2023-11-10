@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>MyBlog</title>
+  <link rel="stylesheet" href="https://nullx76.github.io/CSHub3/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <head>
+      <h1><a href="/">CSHub.nl</a></h1>
+    </head>
+    <section class="section">
+      
+  <section class="page">
+  <p><a href="http://gousios.org/courses/bigdata/spark.html" target="_blank" style="color: rgb(0, 166, 216);"><em>The slides are very useful, this post will only describe things that aren't in the slides but are mentioned in the lectures</em></a></p><p><br></p><h2 id="hdfs">HDFS</h2><p>HDFS is a distributed, replicated file system designed to run on commodity hardware.</p><p><br></p><p>HDFS has a master/slave architecture. An HDFS cluster consists of a single NameNode, a master server that manages the file system namespace and regulates access to files by clients. In addition, there are a number of DataNodes, usually one per node in the cluster, which manage storage attached to the nodes that they run on. HDFS exposes a file system namespace and allows user data to be stored in files. Internally, a file is split into one or more blocks and these blocks are stored in a set of DataNodes. The NameNode executes file system namespace operations like opening, closing, and renaming files and directories. It also determines the mapping of blocks to DataNodes. The DataNodes are responsible for serving read and write requests from the file system’s clients. The DataNodes also perform block creation, deletion, and replication upon instruction from the NameNode.</p><p><br></p><p>When you try to store a file, the following happens:</p><ul><li>The client requests the NameNode to write a file. </li><li>The NameNode provides the address of the DataNodes. </li><li>Then the client directly writes the data on the DataNodes. </li><li>Internally the DataNodes will replicate the data 3 times.</li><li>Once the data is replicated, the DataNode sends an acknowledgment to the client.</li></ul><p><br></p><h2 id="partition-dependencies">Partition dependencies</h2><ul><li><strong>Narrow dependencies:</strong> When each partition at the parent RDD is used by at most one partition of the child RDD, then we have a narrow dependency. Computations of transformations with this kind of dependency are rather fast as they do not require any data shuffling over the cluster network. In addition, optimizations such as pipelining are also possible. <em>Map </em>is an example of a narrow dependency, as it can be done locally.</li><li><strong>Wide dependencies: </strong>When each partition of the parent RDD may be depended on by multiple child partitions (wide dependency), then the computation speed might be significantly affected as we might need to shuffle data around different nodes when creating new partitions. <em>Reduce</em> is an example of a wide dependency, as data comes from multiple sources.</li></ul><p><br></p><h2 id="stream-processing">Stream processing</h2><p>When there are multiple streaming datasources that are pushing data to stream processors, it is important that this data arrives safely. For this we can use TCP, but may things can still go wrong. </p><p><br></p><p>To solve this, we push all the data to an intermediate message broker, which is then connected to the stream processors. This makes it more scalable and reliable.</p>
+  </section>
+
+    </section>
+  </div>
+</body>
+
+</html>

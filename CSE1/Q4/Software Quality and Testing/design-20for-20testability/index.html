@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>MyBlog</title>
+  <link rel="stylesheet" href="https://nullx76.github.io/CSHub3/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <head>
+      <h1><a href="/">CSHub.nl</a></h1>
+    </head>
+    <section class="section">
+      
+  <section class="page">
+  <h2 id="testability">Testability</h2><ul><li><strong>Controllability </strong>determines the work it takes to set up and run test cases and the extent to which individual functions and features of the system under test can be made to respond to test cases</li><li><strong>Observability </strong>determines the work it takes to set up and run test cases and the extent to which the response of the system under test to test cases can be verified</li></ul><p><br></p><ul><li><strong>Hexagonal architecture: </strong>in such an architecture different parts of the application are separated, not doing this makes it very hard to test. This separation could for example be notification code, GUI code, database code, business rules etc.</li><li><strong>Don't ask, tell: </strong>if (for example) calculations are done on some entity, put these calculations in the entity class instead of somewhere else. Then test this functionality in the entity (as it belongs there).</li></ul><p><br></p><h3 id="object-oriented">Object oriented</h3><p><em>TLDR:</em> add more abstraction to make it more testable</p><ul><li><strong>Interfaces: </strong>use clear and well-defined interfaces, this makes it much easier to test and to know what to expect from for example a webservice</li><li><strong>Private methods: </strong>private methods don't have to be tested in isolation, as the public method use this private method. The public methods are actually tested, thus also testing the private methods</li><li><strong>Static methods: </strong>static methods should be avoided as much as possible, as it's hard to mock (PowerMock does make it possible). If some API uses static methods which you want to mock you can add another layer of abstraction in order to properly test it.</li></ul><p><br></p><h2 id="mock-objects">Mock objects</h2><p>Classes might have dependencies that you can't (easily) influence (e.g. database / webservice / other classes). In order to test such classes you <strong>mock</strong> the dependencies of these classes by simulating the dependencies (same methods, same inputs etc) and thus easing the controllability and observability. This simulation will be faster than the original implementation and gives us the ability to also test more exotic cases.</p><p><br></p><p><strong>Mockito</strong></p><p>Mockito is a Java mocking library, you can mock something the following way:</p><div style="white-space: normal;" class="markdown-body"><pre data-lang="text/x-java"><code>// Initialization of fakeInvoicesList
+InvoiceDao fakeDao = Mockito.mock(InvoiceDao);
+Mockito.when(fakeDao.all()).thenReturn(fakeInvoicesList); // If .all() is executed, it returns the fakeInvoicesList
+Mockito.verify(fakeDao).send(arg1); // Verifies that the send method on the fakeDao is called once with argument arg1
+Mockito.verify(fakeDao, Mockito.never()).send(arg2); // Verifies that the send method on the fakeDao is never called with argument arg2
+// Calling the actual test code
+</code></pre>
+</div><p>In the production file you take the DAO in the constructor for example, this one you will use throughout the class (so during testing you always use the mocked class). This is called <strong>dependency injection</strong> (a sub-type of <strong>inversion of control</strong>), which injects dependencies into setters/getters/constructors/methods (using for example Dagger, Guice, Spring)</p><p><br></p><p><strong>When to mock?</strong></p><ul><li>Advantage; very easy to control dependencies, easy to automate tests</li><li>Disadvantage; not real, integration tests might pass while in reality it doesn't work</li><li>Conclusion; use the right tool for the job</li></ul>
+  </section>
+
+    </section>
+  </div>
+</body>
+
+</html>
